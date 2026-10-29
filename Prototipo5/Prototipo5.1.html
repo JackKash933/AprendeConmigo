@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manitas Matemáticas</title>
+    <link rel="stylesheet" href="Prototipo5.1.css">
+</head>
+<body>
+
+    <!-- Canvas para la animación de confeti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="contenedor">
+        
+        <!-- PANTALLA 1: MENÚ PRINCIPAL -->
+        <div id="menu-principal">
+            <h1 class="titulo-principal">Aprende Conmigo</h1>
+            <p class="subtitulo">¿Qué quieres aprender hoy?</p>
+
+            <div class="menu-tarjetas">
+                <!-- BOTÓN CONTAR -->
+                <div>
+                    <button class="tarjeta-actividad btn-contar" onclick="iniciarActividad('contar', 1)">
+                        <span>🔢 ¡CONTAR!</span>
+                        <span>👉</span>
+                    </button>
+                    <div class="fila-subniveles">
+                        <button class="btn-subnivel" onclick="iniciarActividad('contar', 1)">Nivel 1 (1 a 5)</button>
+                        <button class="btn-subnivel" onclick="iniciarActividad('contar', 2)">Nivel 2 (1 a 10)</button>
+                    </div>
+                </div>
+
+                <!-- BOTÓN SUMAR -->
+                <div>
+                    <button class="tarjeta-actividad btn-sumar" onclick="iniciarActividad('sumar', 1)">
+                        <span>➕ ¡SUMAR!</span>
+                        <span>👉</span>
+                    </button>
+                    <div class="fila-subniveles">
+                        <button class="btn-subnivel" onclick="iniciarActividad('sumar', 1)">Nivel 1 (Fácil)</button>
+                        <button class="btn-subnivel" onclick="iniciarActividad('sumar', 2)">Nivel 2 (Hasta 10)</button>
+                    </div>
+                </div>
+
+                <!-- BOTÓN RESTAR -->
+                <div>
+                    <button class="tarjeta-actividad btn-restar" onclick="iniciarActividad('restar', 1)">
+                        <span>➖ ¡RESTAR!</span>
+                        <span>👉</span>
+                    </button>
+                    <div class="fila-subniveles">
+                        <button class="btn-subnivel" onclick="iniciarActividad('restar', 1)">Nivel 1 (Fácil)</button>
+                        <button class="btn-subnivel" onclick="iniciarActividad('restar', 2)">Nivel 2 (Hasta 10)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA 2: ZONA DE JUEGO -->
+        <div id="seccion-juego" class="oculto">
+            
+            <!-- Barra superior -->
+            <div class="top-bar">
+                <button class="btn-nav" onclick="volverAlMenu()">← Menú</button>
+                
+                <div class="selector-nivel">
+                    <button id="btn-lvl1" class="btn-lvl activo" onclick="cambiarNivel(1)">Nivel 1</button>
+                    <button id="btn-lvl2" class="btn-lvl" onclick="cambiarNivel(2)">Nivel 2</button>
+                </div>
+
+                <div class="estrellas-caja">
+                    <span id="estrellas-contador">☆☆☆☆☆</span>
+                </div>
+
+                <button id="btn-sonido-toggle" class="btn-sonido" onclick="alternarSonido()">🔊</button>
+            </div>
+
+            <!-- Ecuación gigante (para suma y resta) -->
+            <div class="ecuacion-visual" id="ecuacion-caja">
+                <span class="num-color1" id="n1">2</span>
+                <span id="simbolo-op" class="simbolo">➕</span>
+                <span class="num-color2" id="n2">3</span>
+                <span>=</span>
+                <span class="caja-interrogacion" id="resultado-preview">?</span>
+            </div>
+
+            <!-- Manos del diseño original -->
+            <div class="fila-manos">
+                <!-- Mano 1 -->
+                <div class="mano-contenedor" id="contenedor-mano1">
+                    <div class="etiqueta-mano">Mano 1</div>
+                    <div class="mano-bonita" id="mano1">
+                        <div class="dedo-estilo dedo-indice" onclick="toggleDedo(0, 1)"></div>
+                        <div class="dedo-estilo dedo-medio"  onclick="toggleDedo(1, 1)"></div>
+                        <div class="dedo-estilo dedo-anular" onclick="toggleDedo(2, 1)"></div>
+                        <div class="dedo-estilo dedo-meñique" onclick="toggleDedo(3, 1)"></div>
+                        <div class="dedo-estilo dedo-pulgar" onclick="toggleDedo(4, 1)"></div>
+                        <div class="palma-bonita">
+                            <div class="linea-palma"></div>
+                        </div>
+                    </div>
+                    <div class="badge-conteo">🖐️ <span id="cont1">0</span></div>
+                </div>
+
+                <!-- Mano 2 -->
+                <div class="mano-contenedor" id="contenedor-mano2">
+                    <div class="etiqueta-mano">Mano 2</div>
+                    <div class="mano-bonita mano-espejo" id="mano2">
+                        <div class="dedo-estilo dedo-indice" onclick="toggleDedo(0, 2)"></div>
+                        <div class="dedo-estilo dedo-medio"  onclick="toggleDedo(1, 2)"></div>
+                        <div class="dedo-estilo dedo-anular" onclick="toggleDedo(2, 2)"></div>
+                        <div class="dedo-estilo dedo-meñique" onclick="toggleDedo(3, 2)"></div>
+                        <div class="dedo-estilo dedo-pulgar" onclick="toggleDedo(4, 2)"></div>
+                        <div class="palma-bonita">
+                            <div class="linea-palma"></div>
+                        </div>
+                    </div>
+                    <div class="badge-conteo">🖐️ <span id="cont2">0</span></div>
+                </div>
+            </div>
+
+            <!-- Mensaje breve de retroalimentación -->
+            <div style="text-align: center;">
+                <div id="feedback-mensaje" class="feedback-badge oculto">¡Muy bien! ⭐</div>
+            </div>
+
+            <!-- Botones gigantes de opciones numéricas -->
+            <div class="opciones-grid" id="caja-opciones"></div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DE VICTORIA -->
+    <div id="modal-victoria" class="modal-victoria oculto">
+        <div class="caja-victoria">
+            <div style="font-size: 4.5rem; margin-bottom: 10px;">🏆</div>
+            <div style="font-size: 1.8rem; margin-bottom: 5px;">⭐⭐⭐⭐⭐</div>
+            <h2 style="font-size: 2rem; color: #1E293B; margin-bottom: 5px;">¡Ganaste! 🎉</h2>
+            <p style="color: #64748B; font-weight: bold; margin-bottom: 20px;">¡Completaste todas las rondas!</p>
+            
+            <button id="btn-siguiente-nivel" class="btn-modal btn-verde" onclick="siguienteNivelVictoria()">¡Ir al Nivel 2! 🚀</button>
+            <button class="btn-modal btn-amarillo" onclick="reiniciarNivelVictoria()">Jugar otra vez 🔁</button>
+            <button class="btn-modal btn-gris" onclick="volverAlMenu()">Volver al Menú 🏠</button>
+        </div>
+    </div>
+
+    <script src="Prototiopo5.1.js"></script>
+</body>
+</html>
